@@ -10,4 +10,12 @@ defmodule Blanton.UtilsTest do
   test "dataset_id() return dataset_id from config/config.exs" do
     assert Blanton.Utils.dataset_id() == Application.get_env(:blanton, :dataset_id)
   end
+
+  test "convert_upcased_string(atom) return upcased string" do
+    assert Blanton.Utils.convert_upcased_string(:atom) == "ATOM"
+  end
+
+  test "convert_upcased_string(string) return upcased string" do
+    assert Blanton.Utils.convert_upcased_string("string") == "STRING"
+  end
 end
