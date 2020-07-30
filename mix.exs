@@ -25,6 +25,7 @@ defmodule Blanton.MixProject do
       {:google_api_big_query, "~> 0.41"},
       {:goth, "~> 1.1.0"},
       {:jason, "~> 1.2"},
+      {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
     ]
   end
 end
