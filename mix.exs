@@ -22,6 +22,7 @@ defmodule Blanton.MixProject do
   defp deps do
     [
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:google_api_big_query, "~> 0.41"},
     ]
   end
 end
