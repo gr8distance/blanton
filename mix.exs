@@ -24,6 +24,7 @@ defmodule Blanton.MixProject do
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:google_api_big_query, "~> 0.41"},
       {:goth, "~> 1.1.0"},
+      {:jason, "~> 1.2"},
     ]
   end
 end
