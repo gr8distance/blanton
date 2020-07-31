@@ -18,4 +18,9 @@ defmodule Blanton.UtilsTest do
   test "convert_upcased_string(string) return upcased string" do
     assert Blanton.Utils.convert_upcased_string("string") == "STRING"
   end
+
+  test "to_string/1 convert any to string" do
+    assert Blanton.Utils.to_s("hoge") == "hoge"
+    assert Blanton.Utils.to_s(:hoge) == "hoge"
+  end
 end
