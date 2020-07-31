@@ -67,11 +67,23 @@ defmodule Blanton.Table do
   end
 
   @doc """
+  Get table lists using config.exs
+
+  ## example
+
+  lists()
+
+  ["table_a", "table_b"]
+  """
+  @spec lists() :: [String.t()]
+  def lists(), do: lists(project_id(), dataset_id())
+
+  @doc """
   Create new table
 
   ## example
 
-  create("PROJECT_ID", "DATASET_ID", "TABLE")
+  create("PROJECT_ID", "DATASET_ID", table)
 
   %GoogleApi.BigQuery.V2.Model.Table{}
   """
@@ -231,6 +243,32 @@ defmodule Blanton.Table do
       tableId: name
     }
   end
+
+  @doc """
+  Update table schema
+
+  update("PROJECT_ID", "DATASET_ID", "TABLE_NAME", Table.new())
+  """
+  @spec update(String.t(), String.t(), String.t(), Table.t()) :: GoogleApi.BigQuery.V2.Model.TableRefence.t()
+  def update(project_id, dataset_id, table_id, table) do
+    {:ok, res} = GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_update(
+      connect(),
+      project_id,
+      dataset_id,
+      table_id,
+      [body: table],
+      []
+    )
+    res
+  end
+
+  @doc """
+  Update table schema
+
+  update("TABLE_NAME", Table.new())
+  """
+  @spec update(String.t(), Table.t()) :: GoogleApi.BigQuery.V2.Model.TableRefence.t()
+  def update(table_id, table), do:  update(project_id(), dataset_id(), table_id, table)
 
   @doc """
   delete specific Table
