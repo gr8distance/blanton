@@ -58,3 +58,27 @@ Blanton.Record.insert("PROJECT_ID", "DATASET_ID", table_name, records)
 # if you set dataset_id and project_id to config.exs
 Blanton.Record.insert(table_name, records)
 ```
+
+* Create migration file
+
+```elixir
+# lib/APP_NAME/bq_schema/TABLE_NAME.ex
+
+defmodule APP_NAME.BqSchema.TABLE_NAME do
+  use Blanton.Schema
+
+  schema :TABLE_NAME do
+    field :column_name, :string, :required
+    field :some_field_column, :record, :repeated, [
+      sub_field(:name, :string, :nullable),
+      sub_field(:price, :int64, :nullable),
+    ]
+  end
+end
+```
+
+* After creating the file, run the following command.
+  * `mix bq.migrate`
+* If you want to delete the table use the following command
+  * `mix bq.drop`
+  * **Please be careful because it cannot be stopped even if you execute it by mistake.**
