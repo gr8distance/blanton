@@ -32,6 +32,7 @@ defmodule Blanton.MixProject do
       {:goth, "~> 1.1.0"},
       {:jason, "~> 1.2"},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
     ]
   end
 end
