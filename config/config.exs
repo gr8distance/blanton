@@ -1,7 +1,7 @@
 import Config
 
 config :goth,
-  json: "gcp/svc.json" |> File.read!
+  json: "gcp/cred.json" |> File.read!
 
 config :blanton,
   schema_dir: "./lib/bq_schema",
