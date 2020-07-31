@@ -6,8 +6,14 @@ defmodule Blanton.MixProject do
       app: :blanton,
       version: "0.1.0",
       elixir: "~> 1.10",
+      description: "Blanton is a BigQuery library written by Elixir.",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      package: [
+        maintainers: ["gr8distance"],
+        licenses: ["MIT"],
+        links: %{"GitHub" => "https://github.com/gr8distance/blanton"}
+      ],
+      deps: deps(),
     ]
   end
 
