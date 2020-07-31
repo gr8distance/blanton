@@ -1,0 +1,82 @@
+defmodule Blanton.Tables.Migrate do
+  import Blanton.Utils
+
+  require IEx
+
+  @doc """
+  Migrate all tables.
+  Create the table if it doesn't exist, or update the schema if it already exists.
+
+  run()
+
+  :ok
+  """
+  @spec run() :: :ok
+  def run() do
+    verify_config!()
+    load_all_deps()
+
+    existing_tables = Blanton.Table.lists()
+    IO.puts "Start migration!"
+    all_modules()
+    |> schema_modules()
+    |> migrate_all!(existing_tables)
+    IO.puts "All migration is succeeded!"
+  end
+
+  defp migrate_all!(modules, existing_tables) do
+    modules
+    |> Enum.each(fn mod ->
+      table_name = mod.__table_name__()
+      if Enum.member?(existing_tables, table_name) do
+        update!(mod, table_name)
+      else
+        migrate!(mod)
+      end
+    end)
+  end
+
+  defp migrate!(module) do
+    IO.puts "--- migrate #{module.__table_name__} ---"
+    Blanton.Table.create(
+      project_id(),
+      dataset_id(),
+      module.schema()
+    )
+    IO.puts "--- #{module.__table_name__} migrated.---"
+  end
+
+  defp update!(module, table_name) do
+    IO.puts ">>> update #{module.__table_name__} <<<"
+    Blanton.Table.update(
+      table_name,
+      module.schema()
+    )
+    IO.puts "--- #{module.__table_name__} updated. ---"
+  end
+
+  @doc """
+  return bq_migration modules
+
+  ## example
+
+  Blanton.Tables.Migrate.schema_modules([
+    Blanton.Tables.Drop, Blanton.Tables.Migrate,
+    Blanton.Utils, Blanton.BqSchema.Users
+  ])
+  [Blanton.BqSchema.Users]
+  """
+  @spec schema_modules([atom()]) :: [atom()]
+  def schema_modules(all_modules) do
+    all_modules
+    |> Enum.map(fn mod -> Atom.to_string(mod) end)
+    |> Enum.filter(fn mod -> String.match?(mod, ~r/.BqSchema./) end)
+    |> Enum.map(fn mod -> String.to_atom(mod) end)
+  end
+
+  @spec all_modules() :: [atom()]
+  defp all_modules() do
+    {:ok, modules} = :application.get_key(:blanton, :modules)
+    modules
+  end
+end

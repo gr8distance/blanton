@@ -64,4 +64,23 @@ defmodule Blanton.Utils do
   """
   @spec to_s(atom()) :: String.t()
   def to_s(from) when is_atom(from), do: Atom.to_string(from)
+
+  @spec load_all_deps() :: list()
+  def load_all_deps, do: Enum.each(standard_deps(), fn dep -> load_deps(dep) end)
+
+  @spec standard_deps() :: [atom()]
+  defp standard_deps, do: [:goth, :blanton]
+
+  @spec load_deps(atom()) :: {:ok, []}
+  defp load_deps(dep), do: Application.ensure_all_started(dep)
+
+  @spec verify_config!() :: Boolean.t()
+  def verify_config!() do
+    unless has_project_id?() && has_dataset_id?() do
+      raise RuntimeError, message: "Either the project ID, the dataset ID, or both are not set.\nPlease check config/config.exs"
+    end
+  end
+
+  defp has_project_id?, do: project_id() != "" && project_id() != nil
+  defp has_dataset_id?, do: dataset_id() != "" && dataset_id() != nil
 end
