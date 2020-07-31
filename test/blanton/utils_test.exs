@@ -20,7 +20,7 @@ defmodule Blanton.UtilsTest do
   end
 
   test "to_string/1 convert any to string" do
-    assert Blanton.Utils.to_s("hoge") == "hoge"
-    assert Blanton.Utils.to_s(:hoge) == "hoge"
+    assert Blanton.Utils.to_s("amuro") == "amuro"
+    assert Blanton.Utils.to_s(:amuro) == "amuro"
   end
 end
