@@ -43,7 +43,7 @@ defmodule Blanton.Column do
   @spec new(String.t(), atom(), atom(), nil) :: GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()
   def new(name, type, mode, nil) do
     %GoogleApi.BigQuery.V2.Model.TableFieldSchema{
-      name: name,
+      name: to_s(name),
       type: convert_upcased_string(type),
       mode: convert_upcased_string(mode),
     }
@@ -78,7 +78,7 @@ defmodule Blanton.Column do
   @spec new(String.t(), atom(), atom(), list()) :: GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()
   def new(name, type, mode, fields) do
     %GoogleApi.BigQuery.V2.Model.TableFieldSchema{
-      name: name,
+      name: to_s(name),
       type: convert_upcased_string(type),
       mode: convert_upcased_string(mode),
       fields: new(fields)
