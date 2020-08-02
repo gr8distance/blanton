@@ -29,6 +29,19 @@ config: :blanton,
   dataset_id: ""
 ```
 
+## You can do
+
+- Dataset
+  - [x] Create
+  - [x] Delete
+- Table
+  - [x] Create
+  - [ ] Create(Partitioning)
+  - [x] Update
+  - [x] Delete
+- Record
+  - [x] Insert
+
 ## Usage
 
 * Create table
