@@ -41,24 +41,6 @@ defmodule Blanton.Schema do
           policyTags: nil,
           type: "BOOLEAN"
         },
-        %GoogleApi.BigQuery.V2.Model.TableFieldSchema{
-          categories: nil,
-          description: nil,
-          fields: nil,
-          mode: "NULLABLE",
-          name: "age",
-          policyTags: nil,
-          type: "INT64"
-        },
-        %GoogleApi.BigQuery.V2.Model.TableFieldSchema{
-          categories: nil,
-          description: nil,
-          fields: nil,
-          mode: "REQUIRED",
-          name: "name",
-          policyTags: nil,
-          type: "STRING"
-        }
       ]
       """
       @spec bq_columns() :: [String.t()]
@@ -111,24 +93,6 @@ defmodule Blanton.Schema do
               policyTags: nil,
               type: "BOOLEAN"
             },
-            %GoogleApi.BigQuery.V2.Model.TableFieldSchema{
-              categories: nil,
-              description: nil,
-              fields: nil,
-              mode: "NULLABLE",
-              name: "age",
-              policyTags: nil,
-              type: "INT64"
-            },
-            %GoogleApi.BigQuery.V2.Model.TableFieldSchema{
-              categories: nil,
-              description: nil,
-              fields: nil,
-              mode: "REQUIRED",
-              name: "name",
-              policyTags: nil,
-              type: "STRING"
-            }
           ]
         },
         selfLink: nil,
@@ -147,11 +111,36 @@ defmodule Blanton.Schema do
       @spec schema() :: GoogleApi.BigQuery.V2.Model.Table.t()
       def schema do
         Blanton.Table.new(
-          project_id(),
-          dataset_id(),
           __table_name__(),
-          bq_columns()
+          bq_columns(),
+          options()
         )
+      end
+
+      defp option_names() do
+        __MODULE__.__info__(:functions)
+        |> Keyword.keys
+        |> Enum.map(fn f -> Atom.to_string(f) end)
+        |> Enum.filter(fn f -> String.match?(f, ~r/__options_/) end)
+        |> Enum.map(fn f -> String.to_atom(f) end)
+      end
+
+      def options() do
+        option_names()
+        |> Enum.flat_map(fn name ->
+          {{:ok, option}, _} = "#{__MODULE__}.#{name}"
+          |> Code.string_to_quoted
+          |> Code.eval_quoted
+
+          key = name
+          |> Atom.to_string
+          |> String.split("__")
+          |> Enum.at(1)
+          |> String.split("_")
+          |> Enum.at(1)
+
+          ["#{key}": option]
+        end)
       end
     end
   end
@@ -236,6 +225,19 @@ defmodule Blanton.Schema do
         type: unquote(type),
         mode: unquote(mode)
       }
+    end
+  end
+
+  defmacro options(do: block) do
+    quote do
+      unquote(block)
+    end
+  end
+
+  defmacro register(name, value) do
+    func_name = :"__options_#{name}__"
+    quote do
+      def unquote(func_name)(), do: unquote(value)
     end
   end
 end

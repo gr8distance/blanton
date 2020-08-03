@@ -9,7 +9,7 @@
 ```elixir
 def deps do
   [
-    {:blanton, "~> 0.1.0"}
+    {:blanton, "~> 0.1.1"}
   ]
 end
 ```
@@ -36,7 +36,7 @@ config: :blanton,
   - [x] Delete
 - Table
   - [x] Create
-  - [ ] Create(Partitioning)
+  - [x] Create(Option usable)
   - [x] Update
   - [x] Delete
 - Record
