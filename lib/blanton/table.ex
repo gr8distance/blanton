@@ -235,6 +235,41 @@ defmodule Blanton.Table do
     new(project_id(), dataset_id(), name, columns)
   end
 
+  @spec new(String.t(), list(), Keyword.t()) :: GoogleApi.BigQuery.V2.Model.Table.t()
+  def new(name, columns, opts) do
+    %GoogleApi.BigQuery.V2.Model.Table{
+      tableReference: reference_new(project_id(), dataset_id(), name),
+      schema: %GoogleApi.BigQuery.V2.Model.TableSchema{fields: Column.new(columns)},
+      clustering: opts[:clustering],
+      creationTime: opts[:creationTime],
+      description: opts[:description],
+      encryptionConfiguration: opts[:encryptionConfiguration],
+      etag: opts[:etag],
+      expirationTime: opts[:expirationTime],
+      externalDataConfiguration: opts[:externalDataConfiguration],
+      friendlyName: opts[:friendlyName],
+      id: opts[:id],
+      kind: opts[:kind],
+      labels: opts[:labels],
+      lastModifiedTime: opts[:lastModifiedTime],
+      location: opts[:location],
+      materializedView: opts[:materializedView],
+      model: opts[:model],
+      numBytes: opts[:nte],
+      numLongTermBytes: opts[:numLongTermBytes],
+      numPhysicalBytes: opts[:numPhysicalBytes],
+      numRows: opts[:numRows],
+      rangePartitioning: opts[:rangePartitioning],
+      requirePartitionFilter: opts[:requirePartitionFilter],
+      selfLink: opts[:selfLink],
+      snapshotDefinition: opts[:snapshotDefinition],
+      streamingBuffer: opts[:streamingBuffer],
+      timePartitioning: opts[:timePartitioning], # これ
+      type: opts[:type],
+      view: opts[:view]
+    }
+  end
+
   @spec reference_new(String.t(), String.t(), String.t()) :: GoogleApi.BigQuery.V2.Model.TableReference.t()
   defp reference_new(project_id, dataset_id, name) do
     %GoogleApi.BigQuery.V2.Model.TableReference{
@@ -268,7 +303,7 @@ defmodule Blanton.Table do
   update("TABLE_NAME", Table.new())
   """
   @spec update(String.t(), Table.t()) :: GoogleApi.BigQuery.V2.Model.TableRefence.t()
-  def update(table_id, table), do:  update(project_id(), dataset_id(), table_id, table)
+  def update(table_id, table), do: update(project_id(), dataset_id(), table_id, table)
 
   @doc """
   delete specific Table
