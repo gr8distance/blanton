@@ -2,8 +2,7 @@ defmodule Mix.Tasks.Bq.Migrate do
   use Mix.Task
 
   @shortdoc "Migrate to BigQuery"
-  def run(args) do
-    path = args |> List.first
-    Blanton.Tables.Migrate.run(path)
+  def run(_) do
+    Blanton.Tables.Migrate.run()
   end
 end
