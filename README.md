@@ -9,7 +9,7 @@
 ```elixir
 def deps do
   [
-    {:blanton, "~> 0.1.1"}
+    {:blanton, "~> 0.1.2"}
   ]
 end
 ```
