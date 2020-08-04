@@ -7,21 +7,19 @@ defmodule Blanton.Tables.Migrate do
   Migrate all tables.
   Create the table if it doesn't exist, or update the schema if it already exists.
 
-  run("lib/bq_schema")
+  run()
 
   :ok
   """
-  @spec run(String.t()) :: :ok
-  def run(path) do
+  @spec run() :: :ok
+  def run() do
     verify_config!()
     load_all_deps()
 
     existing_tables = Blanton.Table.lists()
     IO.puts "Start migration!"
-
-    {:ok, files} = File.ls(path)
-    files
-    |> to_schema(path)
+    all_modules()
+    |> schema_modules()
     |> migrate_all!(existing_tables)
     IO.puts "All migration is succeeded!"
   end
@@ -57,13 +55,28 @@ defmodule Blanton.Tables.Migrate do
     IO.puts "--- #{module.__table_name__} updated. ---"
   end
 
-  def to_schema(files, path) do
-    files
-    |> Enum.map(fn file ->
-      {module, _} = "#{path}/#{file}"
-      |> Code.require_file
-      |> List.first
-      module
-    end)
+  @doc """
+  return bq_migration modules
+
+  ## example
+
+  Blanton.Tables.Migrate.schema_modules([
+    Blanton.Tables.Drop, Blanton.Tables.Migrate,
+    Blanton.Utils, Blanton.BqSchema.Users
+  ])
+  [Blanton.BqSchema.Users]
+  """
+  @spec schema_modules([atom()]) :: [atom()]
+  def schema_modules(all_modules) do
+    all_modules
+    |> Enum.map(fn mod -> Atom.to_string(mod) end)
+    |> Enum.filter(fn mod -> String.match?(mod, ~r/.BqSchema./) end)
+    |> Enum.map(fn mod -> String.to_atom(mod) end)
+  end
+
+  @spec all_modules() :: [atom()]
+  defp all_modules() do
+    {:ok, modules} = :application.get_key(:blanton, :modules)
+    modules
   end
 end

@@ -9,7 +9,7 @@
 ```elixir
 def deps do
   [
-    {:blanton, "~> 0.1.3"}
+    {:blanton, "~> 0.1.1"}
   ]
 end
 ```
@@ -87,17 +87,11 @@ defmodule APP_NAME.BqSchema.TABLE_NAME do
       sub_field(:price, :int64, :nullable),
     ]
   end
-
-  # optional
-  # options do
-  #   partitiondate
-  #   register :timePartitioning, %GoogleApi.BigQuery.V2.Model.TimePartitioning{type: "DAY"}
-  # end
 end
 ```
 
 * After creating the file, run the following command.
-  * `mix bq.migrate lib/bq_schema`
+  * `mix bq.migrate`
 * If you want to delete the table use the following command
   * `mix bq.drop`
   * **Please be careful because it cannot be stopped even if you execute it by mistake.**
