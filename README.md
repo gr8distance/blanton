@@ -24,7 +24,7 @@ config :goth,
 3. If you have one dataset to operate on, you can also set it first.
 
 ```elixir
-config: :blanton,
+config :blanton,
   project_id: "",
   dataset_id: ""
 ```
