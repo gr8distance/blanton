@@ -12,21 +12,33 @@ defmodule Blanton.Query.WhereTest do
     end
   end
 
-  describe "to_string" do
+  describe "clause" do
+    test "when args is string" do
+      query = "is = 10 or in (10, 30)"
+      assert Where.clause(query) == "WHERE " <> query
+    end
+
+    test "when args is tupple" do
+      args = [:=, :column, 10]
+      assert Where.clause(args) == "WHERE column = 10"
+    end
+  end
+
+  describe "to_s" do
     test "when = with string" do
-      assert Where.to_string([:=, :column, "hoge"]) == "column = 'hoge'"
+      assert Where.to_s([:=, :column, "hoge"]) == "column = 'hoge'"
     end
 
     test "when = without string" do
-      assert Where.to_string([:=, :column, 1]) == "column = 1"
+      assert Where.to_s([:=, :column, 1]) == "column = 1"
     end
 
     test "when != with string" do
-      assert Where.to_string([:!=, :column, "hoge"]) == "column != 'hoge'"
+      assert Where.to_s([:!=, :column, "hoge"]) == "column != 'hoge'"
     end
 
     test "when != without string" do
-      assert Where.to_string([:!=, :column, 1]) == "column != 1"
+      assert Where.to_s([:!=, :column, 1]) == "column != 1"
     end
 
     test "when <|>|<=|=>" do
@@ -38,40 +50,48 @@ defmodule Blanton.Query.WhereTest do
       ]
       |> Enum.each(fn args ->
         exp = hd(args)
-        assert Where.to_string(args) == "column #{exp} 'hoge'"
+        assert Where.to_s(args) == "column #{exp} 'hoge'"
       end)
     end
 
     test "when in with string list" do
-      assert Where.to_string([:in, :column, ["a", "b", "c"]]) == "column IN ('a', 'b', 'c')"
+      assert Where.to_s([:in, :column, ["a", "b", "c"]]) == "column IN ('a', 'b', 'c')"
     end
 
     test "when in with number list" do
-      assert Where.to_string([:in, :column, [1, 2, 3]]) == "column IN (1, 2, 3)"
+      assert Where.to_s([:in, :column, [1, 2, 3]]) == "column IN (1, 2, 3)"
     end
 
     test "when not in with string list" do
-      assert Where.to_string([:not_in, :column, ["a", "b", "c"]]) == "column NOT IN ('a', 'b', 'c')"
+      assert Where.to_s([:not_in, :column, ["a", "b", "c"]]) == "column NOT IN ('a', 'b', 'c')"
     end
 
     test "when not in with number list" do
-      assert Where.to_string([:not_in, :column, [1, 2, 3]]) == "column NOT IN (1, 2, 3)"
+      assert Where.to_s([:not_in, :column, [1, 2, 3]]) == "column NOT IN (1, 2, 3)"
     end
 
     test "when between with string list" do
-      assert Where.to_string([:between, :column, ["from", "to"]]) == "column BETWEEN 'from' AND 'to'"
+      assert Where.to_s([:between, :column, ["from", "to"]]) == "column BETWEEN 'from' AND 'to'"
     end
 
     test "when between without string list" do
-      assert Where.to_string([:between, :column, [1, 10]]) == "column BETWEEN 1 AND 10"
+      assert Where.to_s([:between, :column, [1, 10]]) == "column BETWEEN 1 AND 10"
     end
 
     test "when not between with string list" do
-      assert Where.to_string([:not_between, :column, ["from", "to"]]) == "column NOT BETWEEN 'from' AND 'to'"
+      assert Where.to_s([:not_between, :column, ["from", "to"]]) == "column NOT BETWEEN 'from' AND 'to'"
     end
 
     test "when not between without string list" do
-      assert Where.to_string([:not_between, :column, [1, 10]]) == "column NOT BETWEEN 1 AND 10"
+      assert Where.to_s([:not_between, :column, [1, 10]]) == "column NOT BETWEEN 1 AND 10"
+    end
+
+    test "when like with string value" do
+      assert Where.to_s([:like, :column, "%hoge"]) == "column LIKE '%hoge'"
+    end
+
+    test "when not like with string value" do
+      assert Where.to_s([:not_like, :column, "%hoge"]) == "column NOT LIKE '%hoge'"
     end
   end
 end
