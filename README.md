@@ -41,6 +41,12 @@ config :blanton,
   - [x] Delete
 - Record
   - [x] Insert
+  -  Find
+    - [ ] all
+    - [ ] =
+    - [ ] <, >, <=, >=
+    - [ ] in
+    - [ ] between
 
 ## Usage
 
