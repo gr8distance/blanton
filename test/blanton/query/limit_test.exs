@@ -8,7 +8,7 @@ defmodule Blanton.Query.LimitTest do
 
   describe "limit is" do
     test "args is nil" do
-      assert Limit.clause() == ""
+      assert Limit.clause() == nil
     end
 
     test "with integer" do

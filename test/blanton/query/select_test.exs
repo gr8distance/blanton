@@ -6,31 +6,31 @@ defmodule Blanton.Query.SelectTest do
 
   require IEx
 
-  describe "select_clause" do
+  describe "clause" do
     test "when atiry/0" do
       expects = "SELECT *"
-      assert expects == Select.select_clause
+      assert expects == Select.clause
     end
 
     test "when args is nil" do
       expects = "SELECT *"
-      assert expects == Select.select_clause(nil)
+      assert expects == Select.clause(nil)
     end
 
     test "args is string" do
       expects = "SELECT *"
-      assert expects == Select.select_clause("*")
+      assert expects == Select.clause("*")
     end
 
     test "args is nil" do
       expects = "SELECT *"
-      assert expects == Select.select_clause(nil)
+      assert expects == Select.clause(nil)
     end
 
     test "args is list" do
       expects = "SELECT name, email"
       list = ~w{name email}
-      assert expects == Select.select_clause(list)
+      assert expects == Select.clause(list)
     end
   end
 end

@@ -1,10 +1,6 @@
 defmodule Blanton.Query.Where do
-  def clause() do
-    ""
-  end
-
+  def clause(), do: nil
   def clause(args) when is_bitstring(args), do: "WHERE " <> args
-
   def clause(args) when is_tuple(args) do
     {exp, values} = args
     values
@@ -12,12 +8,17 @@ defmodule Blanton.Query.Where do
     |> Enum.join(" #{exp |> Atom.to_string |> String.upcase}")
   end
 
-  def clause([exp, column, value]), do: "WHERE " <> to_s([exp, column, value])
+  def clause([exp, column, value]) when is_atom(exp), do: "WHERE " <> to_s([exp, column, value])
+
+  require IEx
 
   def clause(args) when is_list(args) do
-    args
+    conds = args
     |> Enum.map(& clause(&1))
+    |> Enum.flat_map(& String.split(&1, "WHERE"))
+    |> Enum.reject(& &1 == "")
     |> Enum.join(" AND ")
+    "WHERE" <> conds
   end
 
   def to_s([:=, column, value]) when is_bitstring(value), do: "#{column} = '#{value}'"

@@ -8,7 +8,7 @@ defmodule Blanton.Query.WhereTest do
 
   describe "where" do
     test "arity 0" do
-      assert Where.clause() == ""
+      assert Where.clause() == nil
     end
   end
 
@@ -92,6 +92,15 @@ defmodule Blanton.Query.WhereTest do
 
     test "when not like with string value" do
       assert Where.to_s([:not_like, :column, "%hoge"]) == "column NOT LIKE '%hoge'"
+    end
+
+    test "when conds has multiple condition" do
+      expects = "WHERE name = 'gr8distance' AND  age IN (20, 29)"
+      actual = Where.clause([
+        [:=, :name, "gr8distance"],
+        [:in, :age, [20, 29]]
+      ])
+      assert expects == actual
     end
   end
 end

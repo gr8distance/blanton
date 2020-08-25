@@ -8,7 +8,7 @@ defmodule Blanton.Query.OrderTest do
 
   describe "order by" do
     test "args is nil" do
-      assert Order.clause() == ""
+      assert Order.clause() == nil
     end
 
     test "args is string or atom" do

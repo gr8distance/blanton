@@ -1,7 +1,8 @@
 defmodule Blanton.Query.Order do
   require IEx
 
-  def clause(), do: ""
+  def clause(), do: nil
+  def clause(nil), do: clause()
   def clause(columns) when is_list(columns), do: Enum.join(columns, ", ")
   def clause(column), do: "#{column}"
   def clause(column, sort), do: clause(column) <> sort_rule(sort)
