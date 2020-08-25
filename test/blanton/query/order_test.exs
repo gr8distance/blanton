@@ -12,16 +12,16 @@ defmodule Blanton.Query.OrderTest do
     end
 
     test "args is string or atom" do
-      assert Order.clause("column") == "column"
-      assert Order.clause(:column) == "column"
+      assert Order.clause("column") == "ORDER BY column"
+      assert Order.clause(:column) == "ORDER BY column"
     end
 
     test "args is listed string" do
-      assert Order.clause(["column1", "column2"]) == "column1, column2"
+      assert Order.clause(["column1", "column2"]) == "ORDER BY column1, column2"
     end
 
     test "column with sorting rules" do
-      assert Order.clause("column", "desc") == "column DESC"
+      assert Order.clause("column", "desc") == "ORDER BY column DESC"
     end
   end
 end
