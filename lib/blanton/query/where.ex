@@ -1,6 +1,15 @@
 defmodule Blanton.Query.Where do
+  @moduledoc """
+  Build where clause
+  """
+
+  @spec clause() :: nil
   def clause(), do: nil
+
+  @spec clause(String.t()) :: String.t()
   def clause(args) when is_bitstring(args), do: "WHERE " <> args
+
+
   def clause(args) when is_tuple(args) do
     {exp, values} = args
     values
