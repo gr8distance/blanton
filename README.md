@@ -35,6 +35,7 @@ config :blanton,
   - [x] Create
   - [x] Delete
 - Table
+  - [x] Select
   - [x] Create
   - [x] Create(Option usable)
   - [x] Update
@@ -93,6 +94,17 @@ defmodule APP_NAME.BqSchema.TABLE_NAME do
   #   register :timePartitioning, %GoogleApi.BigQuery.V2.Model.TimePartitioning{type: "DAY"}
   # end
 end
+```
+
+* Select records
+
+```elixir
+Query.table("users")
+|> Query.pluck(["name", "age"])
+|> Query.where([age: 31])
+|> Query.limit(10)
+|> Query.run
+|> Query.to_records
 ```
 
 * After creating the file, run the following command.
