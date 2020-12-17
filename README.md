@@ -9,7 +9,7 @@
 ```elixir
 def deps do
   [
-    {:blanton, "~> 0.1.4"}
+    {:blanton, "~> 0.1.5"}
   ]
 end
 ```
@@ -42,6 +42,7 @@ config :blanton,
   - [x] Delete
 - Record
   - [x] Insert
+  - [x] Select
 
 ## Usage
 
