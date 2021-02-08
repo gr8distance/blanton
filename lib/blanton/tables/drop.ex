@@ -1,4 +1,6 @@
 defmodule Blanton.Tables.Drop do
+  require Logger
+
   @moduledoc """
   Drop all tables
   """
@@ -18,19 +20,21 @@ defmodule Blanton.Tables.Drop do
     verify_config!()
     load_all_deps()
 
-    IO.puts "Drop all tables"
+    Logger.info("Drop all tables")
+
     Blanton.Table.lists()
     |> delete_all
-    IO.puts "Drop suceeded!"
+
+    Logger.info("Drop suceeded!")
   end
 
   @spec delete_all([String.t()]) :: [Tesla.Env.t()]
   defp delete_all(tables) do
     tables
     |> Enum.each(fn table ->
-      IO.puts "drop #{table}"
+      Logger.info("drop #{table}")
       delete(table)
-      IO.puts "#{table} droped."
+      Logger.info("#{table} droped.")
     end)
   end
 

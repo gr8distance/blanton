@@ -4,7 +4,7 @@ defmodule Blanton.MixProject do
   def project do
     [
       app: :blanton,
-      version: "0.1.4",
+      version: "0.1.5",
       elixir: "~> 1.10",
       description: "Blanton is a BigQuery library written by Elixir.",
       start_permanent: Mix.env() == :prod,
@@ -13,7 +13,7 @@ defmodule Blanton.MixProject do
         licenses: ["MIT"],
         links: %{"GitHub" => "https://github.com/gr8distance/blanton"}
       ],
-      deps: deps(),
+      deps: deps()
     ]
   end
 
@@ -29,10 +29,10 @@ defmodule Blanton.MixProject do
     [
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:google_api_big_query, "~> 0.41"},
-      {:goth, "~> 1.1.0"},
+      {:goth, "~> 1.2.0"},
       {:jason, "~> 1.2"},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 end

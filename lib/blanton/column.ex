@@ -22,7 +22,7 @@ defmodule Blanton.Column do
   @spec new([Map.t()]) :: [GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()]
   def new(columns) do
     columns
-    |> Enum.map(fn (c) ->
+    |> Enum.map(fn c ->
       new(
         Map.get(c, :name),
         Map.get(c, :type),
@@ -45,7 +45,7 @@ defmodule Blanton.Column do
     %GoogleApi.BigQuery.V2.Model.TableFieldSchema{
       name: to_s(name),
       type: convert_upcased_string(type),
-      mode: convert_upcased_string(mode),
+      mode: convert_upcased_string(mode)
     }
   end
 
@@ -57,7 +57,8 @@ defmodule Blanton.Column do
 
   %GoogleApi.BigQuery.V2.Model.TableFieldSchema{name: "column", type: "STRING", mode: "REQUIRED"}
   """
-  @spec new(String.t(), atom(), atom(), list()) :: GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()
+  @spec new(String.t(), atom(), atom(), list()) ::
+          GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()
   def new(name, type, mode, []), do: new(name, type, mode, nil)
 
   @doc """
@@ -75,7 +76,8 @@ defmodule Blanton.Column do
     ]
   }
   """
-  @spec new(String.t(), atom(), atom(), list()) :: GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()
+  @spec new(String.t(), atom(), atom(), list()) ::
+          GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()
   def new(name, type, mode, fields) do
     %GoogleApi.BigQuery.V2.Model.TableFieldSchema{
       name: to_s(name),

@@ -17,9 +17,14 @@ defmodule Blanton.Table do
   """
   @spec get(String.t(), String.t(), String.t()) :: GoogleApi.BigQuery.V2.Model.Table.t()
   def get(project_id, dataset_id, table_id) do
-    {:ok, res} = GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_get(
-      connect(), project_id, dataset_id, table_id
-    )
+    {:ok, res} =
+      GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_get(
+        connect(),
+        project_id,
+        dataset_id,
+        table_id
+      )
+
     res
   end
 
@@ -35,7 +40,9 @@ defmodule Blanton.Table do
 
   [%GoogleApi.BigQuery.V2.Model.TableFieldSchema{}]
   """
-  @spec schema(String.t(), String.t(), String.t()) :: [GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()]
+  @spec schema(String.t(), String.t(), String.t()) :: [
+          GoogleApi.BigQuery.V2.Model.TableFieldSchema.t()
+        ]
   def schema(project_id, dataset_id, table_id) do
     res = get(project_id, dataset_id, table_id)
     res.schema.fields
@@ -55,11 +62,14 @@ defmodule Blanton.Table do
   """
   @spec lists(String.t(), String.t()) :: [String.t()]
   def lists(project_id, dataset_id) do
-    {:ok, res} = GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_list(connect(), project_id, dataset_id)
+    {:ok, res} =
+      GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_list(connect(), project_id, dataset_id)
+
     extract_table_names(res.tables)
   end
 
   defp extract_table_names(nil), do: []
+
   defp extract_table_names(tables) do
     Enum.map(tables, fn table ->
       table.tableReference.tableId
@@ -89,13 +99,15 @@ defmodule Blanton.Table do
   """
   @spec create(String.t(), String.t(), Table.t()) :: GoogleApi.BigQuery.V2.Model.Table.t()
   def create(project_id, dataset_id, table) do
-    {:ok, res} = GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_insert(
-      connect(),
-      project_id,
-      dataset_id,
-      [body: table],
-      []
-    )
+    {:ok, res} =
+      GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_insert(
+        connect(),
+        project_id,
+        dataset_id,
+        [body: table],
+        []
+      )
+
     res
   end
 
@@ -264,13 +276,15 @@ defmodule Blanton.Table do
       selfLink: opts[:selfLink],
       snapshotDefinition: opts[:snapshotDefinition],
       streamingBuffer: opts[:streamingBuffer],
-      timePartitioning: opts[:timePartitioning], # これ
+      # これ
+      timePartitioning: opts[:timePartitioning],
       type: opts[:type],
       view: opts[:view]
     }
   end
 
-  @spec reference_new(String.t(), String.t(), String.t()) :: GoogleApi.BigQuery.V2.Model.TableReference.t()
+  @spec reference_new(String.t(), String.t(), String.t()) ::
+          GoogleApi.BigQuery.V2.Model.TableReference.t()
   defp reference_new(project_id, dataset_id, name) do
     %GoogleApi.BigQuery.V2.Model.TableReference{
       datasetId: dataset_id,
@@ -284,16 +298,19 @@ defmodule Blanton.Table do
 
   update("PROJECT_ID", "DATASET_ID", "TABLE_NAME", Table.new())
   """
-  @spec update(String.t(), String.t(), String.t(), Table.t()) :: GoogleApi.BigQuery.V2.Model.TableRefence.t()
+  @spec update(String.t(), String.t(), String.t(), Table.t()) ::
+          GoogleApi.BigQuery.V2.Model.TableRefence.t()
   def update(project_id, dataset_id, table_id, table) do
-    {:ok, res} = GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_update(
-      connect(),
-      project_id,
-      dataset_id,
-      table_id,
-      [body: table],
-      []
-    )
+    {:ok, res} =
+      GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_update(
+        connect(),
+        project_id,
+        dataset_id,
+        table_id,
+        [body: table],
+        []
+      )
+
     res
   end
 
@@ -316,12 +333,14 @@ defmodule Blanton.Table do
   """
   @spec delete(String.t(), String.t(), String.t()) :: Tesla.Env.t()
   def delete(project_id, dataset_id, table_name) do
-    {:ok, res} = GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_delete(
-      connect(),
-      project_id,
-      dataset_id,
-      table_name
-    )
+    {:ok, res} =
+      GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_delete(
+        connect(),
+        project_id,
+        dataset_id,
+        table_name
+      )
+
     res
   end
 end

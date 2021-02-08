@@ -21,7 +21,7 @@ defmodule Blanton.Schema do
       @spec column_names() :: [String.t()]
       def column_names do
         __MODULE__.__info__(:functions)
-        |> Keyword.keys
+        |> Keyword.keys()
         |> Enum.map(fn f -> Atom.to_string(f) end)
         |> Enum.filter(fn f -> String.match?(f, ~r/__bq_/) end)
         |> Enum.map(fn f -> String.to_atom(f) end)
@@ -47,9 +47,11 @@ defmodule Blanton.Schema do
       def bq_columns do
         column_names()
         |> Enum.map(fn name ->
-          {{:ok, column}, _} = "#{__MODULE__}.#{name}"
-          |> Code.string_to_quoted
-          |> Code.eval_quoted
+          {{:ok, column}, _} =
+            "#{__MODULE__}.#{name}"
+            |> Code.string_to_quoted()
+            |> Code.eval_quoted()
+
           column
         end)
       end
@@ -119,7 +121,7 @@ defmodule Blanton.Schema do
 
       defp option_names() do
         __MODULE__.__info__(:functions)
-        |> Keyword.keys
+        |> Keyword.keys()
         |> Enum.map(fn f -> Atom.to_string(f) end)
         |> Enum.filter(fn f -> String.match?(f, ~r/__options_/) end)
         |> Enum.map(fn f -> String.to_atom(f) end)
@@ -128,16 +130,18 @@ defmodule Blanton.Schema do
       def options() do
         option_names()
         |> Enum.flat_map(fn name ->
-          {{:ok, option}, _} = "#{__MODULE__}.#{name}"
-          |> Code.string_to_quoted
-          |> Code.eval_quoted
+          {{:ok, option}, _} =
+            "#{__MODULE__}.#{name}"
+            |> Code.string_to_quoted()
+            |> Code.eval_quoted()
 
-          key = name
-          |> Atom.to_string
-          |> String.split("__")
-          |> Enum.at(1)
-          |> String.split("_")
-          |> Enum.at(1)
+          key =
+            name
+            |> Atom.to_string()
+            |> String.split("__")
+            |> Enum.at(1)
+            |> String.split("_")
+            |> Enum.at(1)
 
           ["#{key}": option]
         end)
@@ -160,8 +164,10 @@ defmodule Blanton.Schema do
         case unquote(table) do
           t when is_bitstring(t) ->
             t
+
           t when is_atom(t) ->
             Atom.to_string(t)
+
           _ ->
             nil
         end
@@ -183,7 +189,8 @@ defmodule Blanton.Schema do
           nil
         )
       end
-      def unquote(name)(), do:  unquote(func_name)()
+
+      def unquote(name)(), do: unquote(func_name)()
     end
   end
 
@@ -199,12 +206,14 @@ defmodule Blanton.Schema do
           nil
         )
       end
-      def unquote(name)(), do:  unquote(func_name)()
+
+      def unquote(name)(), do: unquote(func_name)()
     end
   end
 
   defmacro field(name, type, mode, fields) do
     func_name = :"__bq_#{name}__"
+
     quote do
       def unquote(func_name)() do
         Blanton.Column.new(
@@ -214,7 +223,8 @@ defmodule Blanton.Schema do
           unquote(fields)
         )
       end
-      def unquote(name)(), do:  unquote(func_name)()
+
+      def unquote(name)(), do: unquote(func_name)()
     end
   end
 
@@ -236,6 +246,7 @@ defmodule Blanton.Schema do
 
   defmacro register(name, value) do
     func_name = :"__options_#{name}__"
+
     quote do
       def unquote(func_name)(), do: unquote(value)
     end

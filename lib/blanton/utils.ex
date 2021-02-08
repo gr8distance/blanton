@@ -27,7 +27,7 @@ defmodule Blanton.Utils do
   def convert_upcased_string(from) when is_atom(from) do
     from
     |> to_s
-    |> String.upcase
+    |> String.upcase()
   end
 
   @doc """
@@ -40,7 +40,7 @@ defmodule Blanton.Utils do
   """
   @spec convert_upcased_string(String.t()) :: String.t()
   def convert_upcased_string(from) when is_bitstring(from) do
-    from |> String.upcase
+    from |> String.upcase()
   end
 
   @doc """
@@ -77,7 +77,9 @@ defmodule Blanton.Utils do
   @spec verify_config!() :: Boolean.t()
   def verify_config!() do
     unless has_project_id?() && has_dataset_id?() do
-      raise RuntimeError, message: "Either the project ID, the dataset ID, or both are not set.\nPlease check config/config.exs"
+      raise RuntimeError,
+        message:
+          "Either the project ID, the dataset ID, or both are not set.\nPlease check config/config.exs"
     end
   end
 
