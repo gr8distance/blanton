@@ -1,5 +1,4 @@
 defmodule Blanton.Connection do
-
   @moduledoc """
   Get a Google Cloud Access Token scope
   """
