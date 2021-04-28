@@ -1,4 +1,5 @@
 defmodule Blanton.Connection do
+  require IEx
 
   @moduledoc """
   Get a Google Cloud Access Token scope
@@ -15,7 +16,11 @@ defmodule Blanton.Connection do
   """
   @spec connect() :: GoogleApi.BigQuery.V2.Connection.t()
   def connect do
-    {:ok, token} = Goth.Token.for_scope("https://www.googleapis.com/auth/cloud-platform")
-    GoogleApi.BigQuery.V2.Connection.new(token.token)
+    try do
+      {:ok, token} = Goth.Token.for_scope("https://www.googleapis.com/auth/cloud-platform")
+      GoogleApi.BigQuery.V2.Connection.new(token.token)
+    rescue
+      _ -> Goth.Token.for_scope("https://www.googleapis.com/auth/cloud-platform")
+    end
   end
 end
