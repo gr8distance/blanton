@@ -14,6 +14,8 @@ defmodule Blanton.Query do
 
   import Blanton.Connection
 
+  alias Blanton.Query.Where
+
   require IEx
 
   @doc """
@@ -90,7 +92,7 @@ defmodule Blanton.Query do
 
     where =
       (map[:where] || [])
-      |> parse_where
+      |> Where.parse()
 
     order =
       (map[:order] || [])

@@ -77,33 +77,33 @@ defmodule Blanton.QueryTest do
     assert Query.table(table)
            |> Query.pluck(columns)
            |> Query.where(where)
-           |> Query.to_sql() == "SELECT name, age FROM users WHERE name == '優木せつ菜'"
+           |> Query.to_sql() == "SELECT name, age FROM users WHERE name = '優木せつ菜'"
 
     assert Query.table(table)
            |> Query.pluck(columns)
            |> Query.where(where)
            |> Query.order("age")
-           |> Query.to_sql() == "SELECT name, age FROM users WHERE name == '優木せつ菜' ORDER BY age"
+           |> Query.to_sql() == "SELECT name, age FROM users WHERE name = '優木せつ菜' ORDER BY age"
 
     assert Query.table(table)
            |> Query.pluck(columns)
            |> Query.where(where)
            |> Query.order(["age", "name"])
            |> Query.to_sql() ==
-             "SELECT name, age FROM users WHERE name == '優木せつ菜' ORDER BY age, name"
+             "SELECT name, age FROM users WHERE name = '優木せつ菜' ORDER BY age, name"
 
     assert Query.table(table)
            |> Query.pluck(columns)
            |> Query.where(where)
            |> Query.order(age: :DESC)
            |> Query.to_sql() ==
-             "SELECT name, age FROM users WHERE name == '優木せつ菜' ORDER BY age DESC"
+             "SELECT name, age FROM users WHERE name = '優木せつ菜' ORDER BY age DESC"
 
     assert Query.table(table)
            |> Query.pluck(columns)
            |> Query.where(where)
            |> Query.limit(10)
-           |> Query.to_sql() == "SELECT name, age FROM users WHERE name == '優木せつ菜' LIMIT 10"
+           |> Query.to_sql() == "SELECT name, age FROM users WHERE name = '優木せつ菜' LIMIT 10"
   end
 
   test ".to_records return map from Bigquery Response" do
