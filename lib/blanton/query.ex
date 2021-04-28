@@ -84,41 +84,92 @@ defmodule Blanton.Query do
   SELECT name, age FROM users WHERE age == '31' LIMIT 10""
   """
   def to_sql(map) do
-    columns = (map[:columns] || ["*"])
-    |> Enum.join(", ")
+    columns =
+      (map[:columns] || ["*"])
+      |> Enum.join(", ")
 
-    where = (map[:where] || [])
-    |> parse_where
+    where =
+      (map[:where] || [])
+      |> parse_where
 
-    order = (map[:order] || [])
-    |> parse_order
+    order =
+      (map[:order] || [])
+      |> parse_order
 
-    limit = (map[:limit] || [])
-    |> parse_limit
+    limit =
+      (map[:limit] || [])
+      |> parse_limit
 
     "SELECT #{columns} FROM #{map[:table]}#{where}#{order}#{limit}"
   end
 
   def run(map, project_id \\ Application.get_env(:blanton, :project_id)) do
     sql = to_sql(map)
-    {:ok, response} = GoogleApi.BigQuery.V2.Api.Jobs.bigquery_jobs_query(
-      connect(),
-      project_id,
-      [body: %GoogleApi.BigQuery.V2.Model.QueryRequest{query: sql}]
-    )
+
+    {:ok, response} =
+      GoogleApi.BigQuery.V2.Api.Jobs.bigquery_jobs_query(
+        connect(),
+        project_id,
+        body: %GoogleApi.BigQuery.V2.Model.QueryRequest{query: sql}
+      )
+
     response
   end
 
+  @doc """
+  Extract records from Bigquery API response
+
+  ## example
+  iex(1)>
+  %GoogleApi.BigQuery.V2.Model.QueryResponse{
+    rows: [
+      %GoogleApi.BigQuery.V2.Model.TableRow{
+        f: [
+          %GoogleApi.BigQuery.V2.Model.TableCell{v: "桜坂しずく"},
+          %GoogleApi.BigQuery.V2.Model.TableCell{v: "shizuku@nijigaku.com"}
+        ]
+      },
+      %GoogleApi.BigQuery.V2.Model.TableRow{
+        f: [
+          %GoogleApi.BigQuery.V2.Model.TableCell{v: "中須かすみ"},
+          %GoogleApi.BigQuery.V2.Model.TableCell{v: "kasmin@nijigaku.com"}
+        ]
+      }
+    ],
+    schema: %GoogleApi.BigQuery.V2.Model.TableSchema{
+      fields: [
+        %GoogleApi.BigQuery.V2.Model.TableFieldSchema{name: "id"},
+        %GoogleApi.BigQuery.V2.Model.TableFieldSchema{name: "email"}
+      ]
+    }
+  }
+  |> Blanton.Query.to_records()
+
+  [
+    %{"email" => "shizuku@nijigaku.com", "id" => "桜坂しずく"},
+    %{"email" => "kasmin@nijigaku.com", "id" => "中須かすみ"}
+  ]
+  """
   def to_records(response) do
-    response.schema.fields
+    columns = extract_columns(response)
+
+    response.rows
+    |> Enum.map(fn row -> row.f |> Enum.map(& &1.v) end)
+    |> Enum.map(fn row -> columns |> Enum.zip(row) |> Enum.into(%{}) end)
   end
 
+  defp extract_columns(response), do: response.schema.fields |> Enum.map(& &1.name)
+
   defp parse_where([]), do: ""
+
   defp parse_where(kw) do
-    conds = Enum.map(kw, fn {k, v} -> "#{k} == '#{v}'" end)
-    |> Enum.join(" AND ")
+    conds =
+      Enum.map(kw, fn {k, v} -> "#{k} == '#{v}'" end)
+      |> Enum.join(" AND ")
+
     " WHERE #{conds}"
   end
+
   defp parse_order([]), do: ""
   defp parse_order(column) when is_bitstring(column), do: " ORDER BY #{column}"
   defp parse_order([{k, v}]), do: " ORDER BY #{k} #{v}"
