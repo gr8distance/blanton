@@ -1,8 +1,5 @@
 import Config
 
-config :goth,
-  json: "gcp/cred.json" |> File.read!
-
 config :blanton,
   schema_dir: "./lib/bq_schema",
   project_id: "",
@@ -15,3 +12,5 @@ if Mix.env == :dev do
       "dogma",
     ]
 end
+
+import_config "#{Mix.env}.exs"

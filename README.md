@@ -42,6 +42,7 @@ config :blanton,
   - [x] Delete
 - Record
   - [x] Insert
+  - [x] Select
 
 ## Usage
 

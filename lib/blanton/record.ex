@@ -17,15 +17,18 @@ defmodule Blanton.Record do
     kind: "bigquery#tableDataInsertAllResponse"
   }
   """
-  @spec insert(String.t(), String.t(), String.t(), [%{}], Booealn.t(), Boolean.t()) :: GoogleApi.BigQuery.V2.Model.TableDataInsertAllResponse.t()
+  @spec insert(String.t(), String.t(), String.t(), [%{}], Booealn.t(), Boolean.t()) ::
+          GoogleApi.BigQuery.V2.Model.TableDataInsertAllResponse.t()
   def insert(project_id, dataset_id, table, records, ignore_unknown_values, skip_invalid_rows) do
-    {:ok, res} = GoogleApi.BigQuery.V2.Api.Tabledata.bigquery_tabledata_insert_all(
-      connect(),
-      project_id,
-      dataset_id,
-      table,
-      [body: to_records(records, ignore_unknown_values, skip_invalid_rows)]
-    )
+    {:ok, res} =
+      GoogleApi.BigQuery.V2.Api.Tabledata.bigquery_tabledata_insert_all(
+        connect(),
+        project_id,
+        dataset_id,
+        table,
+        body: to_records(records, ignore_unknown_values, skip_invalid_rows)
+      )
+
     res
   end
 
@@ -41,12 +44,14 @@ defmodule Blanton.Record do
     kind: "bigquery#tableDataInsertAllResponse"
   }
   """
-  @spec insert(String.t(), [%{}], Booealn.t(), Boolean.t()) :: GoogleApi.BigQuery.V2.Model.TableDataInsertAllResponse.t()
+  @spec insert(String.t(), [%{}], Booealn.t(), Boolean.t()) ::
+          GoogleApi.BigQuery.V2.Model.TableDataInsertAllResponse.t()
   def insert(table, records, ignore_unknown_values \\ false, skip_invalid_rows \\ true) do
     insert(project_id(), dataset_id(), table, records, ignore_unknown_values, skip_invalid_rows)
   end
 
-  @spec to_records([%{}], Boolean.t(), Boolean.t()) :: GoogleApi.BigQuery.V2.Model.TableDataInsertAllRequest.t()
+  @spec to_records([%{}], Boolean.t(), Boolean.t()) ::
+          GoogleApi.BigQuery.V2.Model.TableDataInsertAllRequest.t()
   defp to_records(records, ignore_unknown_values, skip_invalid_rows) do
     %GoogleApi.BigQuery.V2.Model.TableDataInsertAllRequest{
       ignoreUnknownValues: ignore_unknown_values,

@@ -1,6 +1,4 @@
 defmodule Blanton.Connection do
-  require IEx
-
   @moduledoc """
   Get a Google Cloud Access Token scope
   """

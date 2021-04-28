@@ -4,7 +4,7 @@ defmodule Blanton.MixProject do
   def project do
     [
       app: :blanton,
-      version: "0.1.4",
+      version: "0.1.5",
       elixir: "~> 1.10",
       description: "Blanton is a BigQuery library written by Elixir.",
       start_permanent: Mix.env() == :prod,
