@@ -46,8 +46,19 @@ defmodule Blanton.Query.WhereTest do
            ]) == " WHERE name IN ('桜坂しずく', '優木せつ菜', '近江彼方') AND age BETWEEN 16 AND 17"
   end
 
-  test "when pass boolean" do
+  test "when passing boolean" do
     assert Where.parse(leader: true) == " WHERE leader = true"
     assert Where.parse(leader: false) == " WHERE leader = false"
+  end
+
+  test "when passing string" do
+    assert Where.parse("name = '優木せつ菜'") == " WHERE name = '優木せつ菜'"
+  end
+
+  test "when passing string with list" do
+    assert Where.parse("name = ?", "中須かすみ") == " WHERE name = '中須かすみ'"
+
+    assert Where.parse("name = ? OR age > ?", ["中須かすみ", 15]) ==
+             " WHERE name = '中須かすみ' OR age > 15"
   end
 end
