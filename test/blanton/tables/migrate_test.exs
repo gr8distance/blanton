@@ -2,8 +2,8 @@ defmodule Blanton.BqSchema.Users do
   use Blanton.Schema
 
   schema :users do
-    field :name, :string, :required
-    field :age, :int64, :nullable
+    field(:name, :string, :required)
+    field(:age, :int64, :nullable)
   end
 end
 
