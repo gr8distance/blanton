@@ -33,6 +33,7 @@ defmodule Blanton.Query.Where do
 
   defp convert(v) when is_number(v), do: v
   defp convert(v) when is_bitstring(v), do: "'#{v}'"
+  defp convert(v), do: "#{v}"
 
   defp format(query) do
     query
