@@ -2,6 +2,6 @@ defmodule BlantonTest do
   use ExUnit.Case
 
   test "version" do
-    assert Blanton.version() == "0.1.5"
+    assert Blanton.version() == "0.2.0"
   end
 end

@@ -14,6 +14,8 @@ defmodule Blanton.Query do
 
   import Blanton.Connection
 
+  alias Blanton.Query.Where
+
   require IEx
 
   @doc """
@@ -90,7 +92,7 @@ defmodule Blanton.Query do
 
     where =
       (map[:where] || [])
-      |> parse_where
+      |> Where.parse()
 
     order =
       (map[:order] || [])
@@ -116,9 +118,49 @@ defmodule Blanton.Query do
     response
   end
 
+  @doc """
+  Extract records from Bigquery API response
+
+  ## example
+  iex(1)>
+  %GoogleApi.BigQuery.V2.Model.QueryResponse{
+    rows: [
+      %GoogleApi.BigQuery.V2.Model.TableRow{
+        f: [
+          %GoogleApi.BigQuery.V2.Model.TableCell{v: "桜坂しずく"},
+          %GoogleApi.BigQuery.V2.Model.TableCell{v: "shizuku@nijigaku.com"}
+        ]
+      },
+      %GoogleApi.BigQuery.V2.Model.TableRow{
+        f: [
+          %GoogleApi.BigQuery.V2.Model.TableCell{v: "中須かすみ"},
+          %GoogleApi.BigQuery.V2.Model.TableCell{v: "kasmin@nijigaku.com"}
+        ]
+      }
+    ],
+    schema: %GoogleApi.BigQuery.V2.Model.TableSchema{
+      fields: [
+        %GoogleApi.BigQuery.V2.Model.TableFieldSchema{name: "id"},
+        %GoogleApi.BigQuery.V2.Model.TableFieldSchema{name: "email"}
+      ]
+    }
+  }
+  |> Blanton.Query.to_records()
+
+  [
+    %{"email" => "shizuku@nijigaku.com", "id" => "桜坂しずく"},
+    %{"email" => "kasmin@nijigaku.com", "id" => "中須かすみ"}
+  ]
+  """
   def to_records(response) do
-    response.schema.fields
+    columns = extract_columns(response)
+
+    response.rows
+    |> Enum.map(fn row -> row.f |> Enum.map(& &1.v) end)
+    |> Enum.map(fn row -> columns |> Enum.zip(row) |> Enum.into(%{}) end)
   end
+
+  defp extract_columns(response), do: response.schema.fields |> Enum.map(& &1.name)
 
   defp parse_where([]), do: ""
 

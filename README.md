@@ -9,7 +9,7 @@
 ```elixir
 def deps do
   [
-    {:blanton, "~> 0.1.5"}
+    {:blanton, "~> 0.2.0"}
   ]
 end
 ```
@@ -45,6 +45,28 @@ config :blanton,
   - [x] Select
 
 ## Usage
+
+* Find records
+
+```elixir
+Query.table("users")
+|> Query.pluck(["name", "age"])
+|> Query.where([age: 31])
+|> Query.limit(10)
+|> Query.run
+|> Query.to_records
+```
+
+* You can use any Query
+
+|input|output|
+|---|---|
+|age: 16| "age = 16"|
+|name: "桜坂しずく", age: 16|"name = '桜坂しずく' AND age = 16"|
+|{:in, :name, ["桜坂しずく", "中須かすみ"]}|"name IN ('桜坂しずく', '中須かすみ')"|
+|{:between, :age, 15, 17}|"age BETWEEN 15 AND 17"|
+|{:like, :name, "かな%"}|"name LIKE 'かな%'"|
+|{:<=, :age, 18}|"age <= 18"|
 
 * Create table
 
@@ -97,16 +119,6 @@ defmodule APP_NAME.BqSchema.TABLE_NAME do
 end
 ```
 
-* Select records
-
-```elixir
-Query.table("users")
-|> Query.pluck(["name", "age"])
-|> Query.where([age: 31])
-|> Query.limit(10)
-|> Query.run
-|> Query.to_records
-```
 
 * After creating the file, run the following command.
   * `mix bq.migrate lib/bq_schema`
