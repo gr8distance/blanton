@@ -1,7 +1,24 @@
 defmodule Blanton.Query.Where do
+  require IEx
+
   def parse([]), do: ""
+  def parse(conds) when is_bitstring(conds), do: " WHERE #{conds}"
   def parse(conds) when is_tuple(conds), do: (" WHERE" <> parse_by(conds)) |> format()
   def parse(conds) when is_list(conds), do: " WHERE #{parse_by(conds)}" |> format()
+
+  def parse(conds, arg) when is_bitstring(conds) and is_bitstring(arg) do
+    " WHERE " <> String.replace(conds, "?", convert(arg))
+  end
+
+  def parse(conds, args) when is_bitstring(conds) and is_list(args) do
+    l =
+      args
+      |> Enum.reduce(conds, fn x, acm ->
+        String.replace(acm, "?", convert(x), global: false)
+      end)
+
+    " WHERE #{l}"
+  end
 
   defp parse_by({:in, column, list}) do
     l =
@@ -31,8 +48,8 @@ defmodule Blanton.Query.Where do
     " #{column} #{operator} #{convert(v)}"
   end
 
-  defp convert(v) when is_number(v), do: v
   defp convert(v) when is_bitstring(v), do: "'#{v}'"
+  defp convert(v), do: "#{v}"
 
   defp format(query) do
     query
