@@ -9,7 +9,7 @@
 ```elixir
 def deps do
   [
-    {:blanton, "~> 0.2.0"}
+    {:blanton, "~> 0.2.1"}
   ]
 end
 ```
@@ -57,16 +57,18 @@ Query.table("users")
 |> Query.to_records
 ```
 
-* You can use any Query
+* You can use below
 
-|input|output|
-|---|---|
-|age: 16| "age = 16"|
-|name: "桜坂しずく", age: 16|"name = '桜坂しずく' AND age = 16"|
-|{:in, :name, ["桜坂しずく", "中須かすみ"]}|"name IN ('桜坂しずく', '中須かすみ')"|
-|{:between, :age, 15, 17}|"age BETWEEN 15 AND 17"|
-|{:like, :name, "かな%"}|"name LIKE 'かな%'"|
-|{:<=, :age, 18}|"age <= 18"|
+| input                                      | output                                 |
+|--------------------------------------------|----------------------------------------|
+| age: 16                                    | "age = 16"                             |
+| name: "桜坂しずく", age: 16                | "name = '桜坂しずく' AND age = 16"     |
+| {:in, :name, ["桜坂しずく", "中須かすみ"]} | "name IN ('桜坂しずく', '中須かすみ')" |
+| {:between, :age, 15, 17}                   | "age BETWEEN 15 AND 17"                |
+| {:like, :name, "かな%"}                    | "name LIKE 'かな%'"                    |
+| {:<=, :age, 18}                            | "age <= 18"                            |
+| "name = ?", "中須かすみ"                   | "name = '中須かすみ'"                  |
+| "name = ? OR age > 15", ["桜坂しずく", 16] | "name = '桜坂しずく' OR age > 15"      |
 
 * Create table
 
