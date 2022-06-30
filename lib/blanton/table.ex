@@ -62,10 +62,15 @@ defmodule Blanton.Table do
   """
   @spec lists(String.t(), String.t()) :: [String.t()]
   def lists(project_id, dataset_id) do
-    {:ok, res} =
-      GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_list(connect(), project_id, dataset_id)
+    {:ok, res} = call_bq_table_list_api(project_id, dataset_id)
+    total_items = res.totalItems
 
-    extract_table_names(res.tables)
+    if total_items > default_get_limit() do
+      {:ok, res} = call_bq_table_list_api(project_id, dataset_id, maxResults: total_items)
+      extract_table_names(res.tables)
+    else
+      extract_table_names(res.tables)
+    end
   end
 
   defp extract_table_names(nil), do: []
@@ -74,6 +79,12 @@ defmodule Blanton.Table do
     Enum.map(tables, fn table ->
       table.tableReference.tableId
     end)
+  end
+
+  defp default_get_limit, do: 50
+
+  defp call_bq_table_list_api(project_id, dataset_id, opts \\ []) do
+    GoogleApi.BigQuery.V2.Api.Tables.bigquery_tables_list(connect(), project_id, dataset_id, opts)
   end
 
   @doc """
